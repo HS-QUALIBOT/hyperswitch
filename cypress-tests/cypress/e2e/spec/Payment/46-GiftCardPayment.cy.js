@@ -1,14 +1,37 @@
 import * as fixtures from "../../../fixtures/imports";
 import State from "../../../utils/State";
-import getConnectorDetails, * as utils from "../../configs/Payment/Utils";
+import getConnectorDetails, {
+  CONNECTOR_LISTS,
+  shouldIncludeConnector,
+} from "../../configs/Payment/Utils";
 
 let globalState;
+let connector;
 
 describe("Gift Card Payment - Adyen Givex", () => {
-  before("seed global state", () => {
-    cy.task("getGlobalState").then((state) => {
-      globalState = new State(state);
-    });
+  before("seed global state", function () {
+    let skip = false;
+
+    cy.task("getGlobalState")
+      .then((state) => {
+        globalState = new State(state);
+        connector = globalState.get("connectorId");
+
+        if (
+          shouldIncludeConnector(connector, CONNECTOR_LISTS.INCLUDE.GIFT_CARD)
+        ) {
+          skip = true;
+          return;
+        }
+      })
+      .then(() => {
+        if (skip) {
+          cy.log(
+            `Skipping gift card tests for connector: ${connector} — not in GIFT_CARD inclusion list`
+          );
+          this.skip();
+        }
+      });
   });
 
   after("flush global state", () => {
@@ -36,7 +59,8 @@ describe("Gift Card Payment - Adyen Givex", () => {
           globalState
         );
 
-        if (!utils.should_continue_further(data)) {
+        if (!shouldContinue) return;
+        if (data && data.Response && data.Response.status === 501) {
           shouldContinue = false;
         }
       });
@@ -74,7 +98,8 @@ describe("Gift Card Payment - Adyen Givex", () => {
             globalState
           );
 
-          if (!utils.should_continue_further(data)) {
+          if (!shouldContinue) return;
+          if (data && data.Response && data.Response.status === 501) {
             shouldContinue = false;
           }
         }
@@ -113,7 +138,8 @@ describe("Gift Card Payment - Adyen Givex", () => {
             globalState
           );
 
-          if (!utils.should_continue_further(data)) {
+          if (!shouldContinue) return;
+          if (data && data.Response && data.Response.status === 501) {
             shouldContinue = false;
           }
         }

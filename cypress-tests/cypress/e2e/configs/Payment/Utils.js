@@ -508,6 +508,7 @@ export const CONNECTOR_LISTS = {
       "stripe",
     ],
     CARD_INSTALLMENTS: ["adyen"],
+    GIFT_CARD: ["adyen"],
     AUTO_RETRY: [
       "cybersource",
       "checkout",
