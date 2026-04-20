@@ -2192,6 +2192,56 @@ export const connectorDetails = {
       },
     }),
   },
+  gift_card_pm: {
+    GivexGiftCard: getCustomExchange({
+      Request: {
+        payment_method: "gift_card",
+        payment_method_type: "givex",
+        payment_method_data: {
+          gift_card: {
+            givex: {
+              number: "6036280000000000000",
+              cvc: "122222",
+            },
+          },
+        },
+        currency: "EUR",
+        customer_acceptance: null,
+      },
+    }),
+    GivexGiftCardInsufficientBalance: getCustomExchange({
+      Request: {
+        payment_method: "gift_card",
+        payment_method_type: "givex",
+        payment_method_data: {
+          gift_card: {
+            givex: {
+              number: "6036280000000000000",
+              cvc: "122222",
+            },
+          },
+        },
+        currency: "EUR",
+        customer_acceptance: null,
+      },
+    }),
+    GivexGiftCardCurrencyMismatch: getCustomExchange({
+      Request: {
+        payment_method: "gift_card",
+        payment_method_type: "givex",
+        payment_method_data: {
+          gift_card: {
+            givex: {
+              number: "6036280000000000000",
+              cvc: "122222",
+            },
+          },
+        },
+        currency: "USD",
+        customer_acceptance: null,
+      },
+    }),
+  },
   pm_list: {
     PmListResponse: {
       PmListNull: {

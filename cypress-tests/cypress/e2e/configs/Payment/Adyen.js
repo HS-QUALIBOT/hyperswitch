@@ -1027,6 +1027,77 @@ export const connectorDetails = {
       },
     },
   },
+  gift_card_pm: {
+    GivexGiftCard: getCustomExchange({
+      Request: {
+        payment_method: "gift_card",
+        payment_method_type: "givex",
+        payment_method_data: {
+          gift_card: {
+            givex: {
+              number: "6036280000000000000",
+              cvc: "122222",
+            },
+          },
+        },
+        currency: "EUR",
+        customer_acceptance: null,
+      },
+      Response: {
+        status: 200,
+        body: {
+          status: "succeeded",
+        },
+      },
+    }),
+    GivexGiftCardInsufficientBalance: getCustomExchange({
+      Request: {
+        payment_method: "gift_card",
+        payment_method_type: "givex",
+        payment_method_data: {
+          gift_card: {
+            givex: {
+              number: "6036280000000000000",
+              cvc: "122222",
+            },
+          },
+        },
+        currency: "EUR",
+        customer_acceptance: null,
+      },
+      Response: {
+        status: 200,
+        body: {
+          status: "failed",
+          error_message: "Insufficient balance in the payment method",
+        },
+      },
+    }),
+    GivexGiftCardCurrencyMismatch: getCustomExchange({
+      Request: {
+        payment_method: "gift_card",
+        payment_method_type: "givex",
+        payment_method_data: {
+          gift_card: {
+            givex: {
+              number: "6036280000000000000",
+              cvc: "122222",
+            },
+          },
+        },
+        currency: "USD",
+        customer_acceptance: null,
+      },
+      Response: {
+        status: 200,
+        body: {
+          status: "failed",
+          error_message:
+            "Payment Method currency does not match the payment currency",
+        },
+      },
+    }),
+  },
   pm_list: {
     PmListResponse: {
       PmListNull: {
