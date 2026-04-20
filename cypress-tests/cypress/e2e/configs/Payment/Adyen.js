@@ -1046,7 +1046,8 @@ export const connectorDetails = {
       Response: {
         status: 200,
         body: {
-          status: "succeeded",
+          status: "failed",
+          error_message: "Insufficient balance in the payment method",
         },
       },
     }),
