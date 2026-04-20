@@ -59,23 +59,26 @@ describe("Gift Card Payment - Adyen Givex", () => {
     it("Create and Confirm Givex Gift Card Payment with insufficient balance -> Retrieve Payment", () => {
       let shouldContinue = true;
 
-      cy.step("Create and Confirm Givex Gift Card Payment (Insufficient Balance)", () => {
-        const data = getConnectorDetails(globalState.get("connectorId"))[
-          "gift_card_pm"
-        ]["GivexGiftCardInsufficientBalance"];
+      cy.step(
+        "Create and Confirm Givex Gift Card Payment (Insufficient Balance)",
+        () => {
+          const data = getConnectorDetails(globalState.get("connectorId"))[
+            "gift_card_pm"
+          ]["GivexGiftCardInsufficientBalance"];
 
-        cy.createConfirmPaymentTest(
-          fixtures.createConfirmPaymentBody,
-          data,
-          "no_three_ds",
-          "automatic",
-          globalState
-        );
+          cy.createConfirmPaymentTest(
+            fixtures.createConfirmPaymentBody,
+            data,
+            "no_three_ds",
+            "automatic",
+            globalState
+          );
 
-        if (!utils.should_continue_further(data)) {
-          shouldContinue = false;
+          if (!utils.should_continue_further(data)) {
+            shouldContinue = false;
+          }
         }
-      });
+      );
 
       cy.step("Retrieve Payment", () => {
         if (!shouldContinue) {
@@ -95,23 +98,26 @@ describe("Gift Card Payment - Adyen Givex", () => {
     it("Create and Confirm Givex Gift Card Payment with currency mismatch -> Retrieve Payment", () => {
       let shouldContinue = true;
 
-      cy.step("Create and Confirm Givex Gift Card Payment (Currency Mismatch)", () => {
-        const data = getConnectorDetails(globalState.get("connectorId"))[
-          "gift_card_pm"
-        ]["GivexGiftCardCurrencyMismatch"];
+      cy.step(
+        "Create and Confirm Givex Gift Card Payment (Currency Mismatch)",
+        () => {
+          const data = getConnectorDetails(globalState.get("connectorId"))[
+            "gift_card_pm"
+          ]["GivexGiftCardCurrencyMismatch"];
 
-        cy.createConfirmPaymentTest(
-          fixtures.createConfirmPaymentBody,
-          data,
-          "no_three_ds",
-          "automatic",
-          globalState
-        );
+          cy.createConfirmPaymentTest(
+            fixtures.createConfirmPaymentBody,
+            data,
+            "no_three_ds",
+            "automatic",
+            globalState
+          );
 
-        if (!utils.should_continue_further(data)) {
-          shouldContinue = false;
+          if (!utils.should_continue_further(data)) {
+            shouldContinue = false;
+          }
         }
-      });
+      );
 
       cy.step("Retrieve Payment", () => {
         if (!shouldContinue) {
