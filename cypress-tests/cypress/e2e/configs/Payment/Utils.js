@@ -509,6 +509,7 @@ export const CONNECTOR_LISTS = {
     ],
     CARD_INSTALLMENTS: ["adyen"],
     GIFT_CARD: ["adyen"],
+    BILLING_DESCRIPTOR: ["adyen"],
     AUTO_RETRY: [
       "cybersource",
       "checkout",
@@ -531,6 +532,7 @@ export const CONNECTOR_LISTS = {
       "worldpay",
       "worldpayvantiv",
     ],
+    EXTERNAL_THREE_DS: ["stripe"],
     // Add more inclusion lists
   },
 };
