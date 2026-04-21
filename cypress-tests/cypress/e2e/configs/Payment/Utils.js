@@ -509,7 +509,7 @@ export const CONNECTOR_LISTS = {
     ],
     CARD_INSTALLMENTS: ["adyen"],
     GIFT_CARD: ["adyen"],
-    BILLING_DESCRIPTOR: ["adyen"],
+    BILLING_DESCRIPTOR: ["adyen", "checkout"],
     AUTO_RETRY: [
       "cybersource",
       "checkout",
