@@ -533,6 +533,7 @@ export const CONNECTOR_LISTS = {
       "worldpayvantiv",
     ],
     EXTERNAL_THREE_DS: ["stripe"],
+    BANK_DEBIT: ["novalnet"],
     // Add more inclusion lists
   },
 };

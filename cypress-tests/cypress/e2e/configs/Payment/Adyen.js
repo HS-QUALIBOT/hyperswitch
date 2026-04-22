@@ -1,5 +1,5 @@
 import { customerAcceptance, multiUseMandateData } from "./Commons";
-import { getCustomExchange } from "./Modifiers";
+import { getCurrency, getCustomExchange } from "./Modifiers";
 
 const successfulNo3DSCardDetails = {
   card_number: "4111111111111111",
@@ -1060,6 +1060,54 @@ export const connectorDetails = {
       },
     },
   },
+  wallet_pm: {
+    PaymentIntent: (paymentMethodType) =>
+      getCustomExchange({
+        Request: {
+          currency: getCurrency(paymentMethodType),
+        },
+        Response: {
+          status: 200,
+          body: {
+            status: "requires_payment_method",
+          },
+        },
+      }),
+    AliPayHk: getCustomExchange({
+      Request: {
+        payment_method: "wallet",
+        payment_method_type: "ali_pay_hk",
+        payment_method_data: {
+          wallet: {
+            ali_pay_hk_redirect: {},
+          },
+        },
+        billing: {
+          address: {
+            line1: "1467",
+            line2: "Harrison Street",
+            line3: "Harrison Street",
+            city: "Hong Kong",
+            state: "HK",
+            zip: "999077",
+            country: "HK",
+            first_name: "joseph",
+            last_name: "Doe",
+          },
+          phone: {
+            number: "9123456789",
+            country_code: "+852",
+          },
+        },
+      },
+      Response: {
+        status: 200,
+        body: {
+          status: "requires_customer_action",
+        },
+      },
+    }),
+  },
   gift_card_pm: {
     GivexGiftCard: getCustomExchange({
       Request: {
@@ -1068,19 +1116,19 @@ export const connectorDetails = {
         payment_method_data: {
           gift_card: {
             givex: {
-              number: "6036280000000000000",
-              cvc: "122222",
+              number: "6006490000000000",
+              cvc: "737",
             },
           },
         },
+        amount: 1100,
         currency: "EUR",
         customer_acceptance: null,
       },
       Response: {
         status: 200,
         body: {
-          status: "failed",
-          error_message: "Insufficient balance in the payment method",
+          status: "succeeded",
         },
       },
     }),
@@ -1091,11 +1139,12 @@ export const connectorDetails = {
         payment_method_data: {
           gift_card: {
             givex: {
-              number: "6036280000000000000",
-              cvc: "122222",
+              number: "6006490000000000",
+              cvc: "737",
             },
           },
         },
+        amount: 14100,
         currency: "EUR",
         customer_acceptance: null,
       },
@@ -1114,8 +1163,8 @@ export const connectorDetails = {
         payment_method_data: {
           gift_card: {
             givex: {
-              number: "6036280000000000000",
-              cvc: "122222",
+              number: "6006490000000000",
+              cvc: "737",
             },
           },
         },
@@ -1132,6 +1181,7 @@ export const connectorDetails = {
       },
     }),
   },
+
   pm_list: {
     PmListResponse: {
       PmListNull: {
