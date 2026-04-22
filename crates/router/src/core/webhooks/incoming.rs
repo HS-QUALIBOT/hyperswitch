@@ -540,7 +540,9 @@ async fn dispatch_webhook_pipeline<'a>(
     platform: &'a domain::Platform,
     connector: &'a ConnectorEnum,
     connector_name: &'a str,
-    mca: Option<&'a hyperswitch_domain_models::merchant_connector_account::MerchantConnectorAccount>,
+    mca: Option<
+        &'a hyperswitch_domain_models::merchant_connector_account::MerchantConnectorAccount,
+    >,
     request_details: &'a IncomingWebhookRequestDetails<'a>,
     execution_path: common_enums::ExecutionPath,
 ) -> errors::RouterResult<WebhookProcessingResult<'a>> {
@@ -673,9 +675,8 @@ async fn dispatch_webhook_pipeline<'a>(
                 )
                 .await
                 .ok();
-                payment_attempt.map(|payment_attempt| WebhookResourceData::Payment {
-                    payment_attempt,
-                })
+                payment_attempt
+                    .map(|payment_attempt| WebhookResourceData::Payment { payment_attempt })
             }
             _ => None,
         }

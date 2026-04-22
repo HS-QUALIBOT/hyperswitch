@@ -164,10 +164,8 @@ pub trait WebhookPipeline: Send + Sync {
     ///
     /// `reference` may be `None` for events that carry no resource id (e.g. account-level
     /// notifications); the driver short-circuits such events before phase 2.
-    async fn parse(
-        &self,
-        request: &IncomingWebhookRequestDetails<'_>,
-    ) -> RouterResult<ParsedEvent>;
+    async fn parse(&self, request: &IncomingWebhookRequestDetails<'_>)
+        -> RouterResult<ParsedEvent>;
 
     /// Phase 2. Runs after the driver has resolved the merchant-connector-account and the
     /// webhook secret from the parsed reference. Performs source verification and produces
@@ -262,12 +260,7 @@ impl<'a> WebhookPipeline for DirectWebhookPipeline<'a> {
         // Source verification: delegated to the connector's own signature algorithm. Uses
         // the MCA-resolved webhook details and account details captured at construction
         // time; no re-verification downstream.
-        let merchant_id = self
-            .platform
-            .get_processor()
-            .get_account()
-            .get_id()
-            .clone();
+        let merchant_id = self.platform.get_processor().get_account().get_id().clone();
         let webhook_details = self
             .merchant_connector_account
             .and_then(|mca| mca.connector_webhook_details.clone());
@@ -408,11 +401,11 @@ impl<'a> UcsWebhookPipeline<'a> {
 
     fn build_auth_metadata(
         &self,
-    ) -> RouterResult<external_services::grpc_client::unified_connector_service::ConnectorAuthMetadata>
-    {
-        let mca_type = MerchantConnectorAccountType::DbVal(Box::new(
-            self.merchant_connector_account.clone(),
-        ));
+    ) -> RouterResult<
+        external_services::grpc_client::unified_connector_service::ConnectorAuthMetadata,
+    > {
+        let mca_type =
+            MerchantConnectorAccountType::DbVal(Box::new(self.merchant_connector_account.clone()));
         build_unified_connector_service_auth_metadata(
             mca_type,
             self.platform.get_processor(),
@@ -422,17 +415,11 @@ impl<'a> UcsWebhookPipeline<'a> {
         .attach_printable("Failed to build UCS auth metadata for webhook pipeline")
     }
 
-    fn build_headers(
-        &self,
-    ) -> external_services::grpc_client::GrpcHeadersUcs {
+    fn build_headers(&self) -> external_services::grpc_client::GrpcHeadersUcs {
         self.state
             .get_grpc_headers_ucs(self.execution_mode)
             .lineage_ids(LineageIds::new(
-                self.platform
-                    .get_processor()
-                    .get_account()
-                    .get_id()
-                    .clone(),
+                self.platform.get_processor().get_account().get_id().clone(),
                 self.merchant_connector_account.profile_id.clone(),
             ))
             .external_vault_proxy_metadata(None)
@@ -464,12 +451,9 @@ impl<'a> UcsWebhookPipeline<'a> {
         )
     }
 
-    fn build_webhook_secrets_proto(
-        &self,
-    ) -> RouterResult<Option<payments_grpc::WebhookSecrets>> {
-        let mca_type = MerchantConnectorAccountType::DbVal(Box::new(
-            self.merchant_connector_account.clone(),
-        ));
+    fn build_webhook_secrets_proto(&self) -> RouterResult<Option<payments_grpc::WebhookSecrets>> {
+        let mca_type =
+            MerchantConnectorAccountType::DbVal(Box::new(self.merchant_connector_account.clone()));
         build_webhook_secrets_from_merchant_connector_account(&mca_type)
             .change_context(errors::ApiErrorResponse::InternalServerError)
             .attach_printable("Failed to build UCS webhook secrets from MCA")
@@ -484,8 +468,7 @@ impl<'a> UcsWebhookPipeline<'a> {
 fn event_reference_to_object_ref(
     reference: &payments_grpc::EventReference,
 ) -> RouterResult<Option<ObjectReferenceId>> {
-    use api_models::payments as api_payments;
-    use api_models::webhooks as api_webhooks;
+    use api_models::{payments as api_payments, webhooks as api_webhooks};
     use payments_grpc::event_reference::Resource;
 
     let Some(resource) = reference.resource.as_ref() else {
@@ -530,9 +513,9 @@ fn event_reference_to_object_ref(
             .as_ref()
             .or(dispute.connector_transaction_id.as_ref())
             .map(|id| {
-                ObjectReferenceId::PaymentId(
-                    api_payments::PaymentIdType::ConnectorTransactionId(id.clone()),
-                )
+                ObjectReferenceId::PaymentId(api_payments::PaymentIdType::ConnectorTransactionId(
+                    id.clone(),
+                ))
             }),
         Resource::Mandate(mandate) => mandate.connector_mandate_id.as_ref().map(|id| {
             ObjectReferenceId::MandateId(api_webhooks::MandateIdType::ConnectorMandateId(
@@ -546,12 +529,11 @@ fn event_reference_to_object_ref(
                     api_webhooks::PayoutIdType::ConnectorPayoutId(cid.clone()),
                 ))
             } else {
-                payout
-                    .merchant_payout_id
-                    .as_ref()
-                    .map(|mid| ObjectReferenceId::PayoutId(
-                        api_webhooks::PayoutIdType::PayoutAttemptId(mid.clone()),
+                payout.merchant_payout_id.as_ref().map(|mid| {
+                    ObjectReferenceId::PayoutId(api_webhooks::PayoutIdType::PayoutAttemptId(
+                        mid.clone(),
                     ))
+                })
             }
         }
         #[cfg(not(feature = "payouts"))]
@@ -632,10 +614,7 @@ impl<'a> WebhookPipeline for UcsWebhookPipeline<'a> {
         // and simple flows still work when the caller has nothing to override with.
         let caller_secrets = payments_grpc::WebhookSecrets {
             secret: String::from_utf8(secrets.secret.clone()).unwrap_or_default(),
-            additional_secret: secrets
-                .additional_secret
-                .as_ref()
-                .map(|s| s.peek().clone()),
+            additional_secret: secrets.additional_secret.as_ref().map(|s| s.peek().clone()),
         };
         let webhook_secrets = if caller_secrets.secret.is_empty() {
             self.build_webhook_secrets_proto()?
