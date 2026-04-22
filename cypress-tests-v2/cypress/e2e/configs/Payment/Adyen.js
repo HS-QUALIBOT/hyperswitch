@@ -93,13 +93,28 @@ export const connectorDetails = {
     }),
     ConnectorTestingData: getCustomExchange({
       Request: {
+        amount_details: {
+          order_amount: 1000,
+          currency: "EUR",
+        },
+        billing: billingAddress,
+        connector_metadata: connectorMetadata,
+        customer_acceptance: null,
+      },
+      Response: {
+        status: 200,
+        body: {
+          status: "requires_payment_method",
+        },
+      },
+    }),
+    ConnectorTestingDataConfirm: getCustomExchange({
+      Request: {
+        payment_method: "card",
         payment_method_data: {
           card: successfulNo3DSCardDetails,
         },
-        payment_method_type: "card",
-        payment_method_subtype: "credit",
         browser_info: browserInfo,
-        connector_metadata: connectorMetadata,
         customer_acceptance: null,
       },
       Response: {

@@ -25,10 +25,10 @@ describe("[Payment] [Connector Testing Data] [Payment Method: Card]", () => {
       cy.task("setGlobalState", globalState.data);
     });
 
-    it("Create payment intent", () => {
+    it("Create payment intent with connector_metadata", () => {
       const data = getConnectorDetails(globalState.get("connectorId"))[
         "card_pm"
-      ]["PaymentIntent"];
+      ]["ConnectorTestingData"];
       const req_data = data["Request"];
       const res_data = data["Response"];
 
@@ -43,10 +43,10 @@ describe("[Payment] [Connector Testing Data] [Payment Method: Card]", () => {
       if (should_continue) should_continue = should_continue_further(data);
     });
 
-    it("Confirm payment intent with connector_metadata and browser_info", () => {
+    it("Confirm payment intent with browser_info", () => {
       const data = getConnectorDetails(globalState.get("connectorId"))[
         "card_pm"
-      ]["ConnectorTestingData"];
+      ]["ConnectorTestingDataConfirm"];
       const req_data = data["Request"];
 
       cy.paymentConfirmCall(globalState, req_data, data);
