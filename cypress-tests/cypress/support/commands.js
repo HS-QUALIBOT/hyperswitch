@@ -8043,6 +8043,22 @@ Cypress.Commands.add("blocklistDeleteRule", (type, data, globalState) => {
 });
 
 Cypress.Commands.add(
+  "getPaymentDetails",
+  (globalState, queryParams = "force_sync=true&expand_attempts=true") => {
+    const paymentId = globalState.get("paymentID");
+    return cy.request({
+      method: "GET",
+      url: `${globalState.get("baseUrl")}/payments/${paymentId}?${queryParams}`,
+      headers: {
+        "Content-Type": "application/json",
+        "api-key": globalState.get("apiKey"),
+      },
+      failOnStatusCode: false,
+    });
+  }
+);
+
+Cypress.Commands.add(
   "paymentsEligibilityCheck",
   (requestBody, data, globalState) => {
     const { Request: reqData, Response: resData } = data || {};
